@@ -1,6 +1,9 @@
 import Phaser from 'phaser';
 import { Phase, ResourceType, WALL_CONFIG, SAFE_ZONE, NPC_CONFIG } from '../data/GameConfig';
 import { Wall } from '../objects/Wall';
+import { ProgressManager } from '../systems/ProgressManager';
+import { CollectionManager } from '../systems/CollectionManager';
+import { getSaveManager } from '../systems/SaveManager';
 import { Monster } from '../objects/Monster';
 import { NPC } from '../objects/NPC';
 import { DayNightCycle } from '../systems/DayNightCycle';
@@ -42,7 +45,10 @@ export class GameScene extends Phaser.Scene {
   create(data?: { stage?: number }): void {
     this.gameOver = false;
     this.monstersKilled = 0;
-    this.stage = data?.stage ?? 0;
+    this.stage = data?.stage ?? 1;
+
+    const save = getSaveManager();
+    const stageCfg = ProgressManager.getStageConfig(this.stage, save.getUpgradeLevel('wallHp'));
 
     this.playerResources = new Map([
       [ResourceType.HERB, 0],
@@ -51,7 +57,7 @@ export class GameScene extends Phaser.Scene {
     ]);
 
     this.createMap();
-    this.wall = new Wall(this);
+    this.wall = new Wall(this, stageCfg.wallMaxHp);
 
     this.monstersGroup = this.physics.add.group({ runChildUpdate: true });
     this.projectilesGroup = this.physics.add.group({ runChildUpdate: true });
@@ -59,7 +65,13 @@ export class GameScene extends Phaser.Scene {
     this.dayNightCycle = new DayNightCycle(this, this.safeZoneBg, this.outsideBg);
     this.resourceManager = new ResourceManager(this);
     this.npcManager = new NPCManager(this);
-    this.waveManager = new WaveManager(this, this.monstersGroup, this.stage);
+    this.waveManager = new WaveManager(
+      this, this.monstersGroup, this.stage,
+      stageCfg.waves,
+      ProgressManager.getMonsterHpMultiplier(this.stage),
+      ProgressManager.getMonsterSpeedMultiplier(this.stage),
+      ProgressManager.getMonsterDamageMultiplier(this.stage),
+    );
 
     this.createHUD();
     this.setupCollisions();
@@ -273,7 +285,8 @@ export class GameScene extends Phaser.Scene {
           if (npcObj.state === 'injured') {
             const success = this.npcManager.tryHealNPC(npcObj, this.playerResources, this.wall);
             if (success) {
-              this.showInfo(`${NPC_CONFIG[npcObj.npcType].label} healed!`);
+              const rarity = CollectionManager.registerNpc(npcObj.npcType);
+              this.showInfo(`${NPC_CONFIG[npcObj.npcType].label} healed! (${rarity})`);
             } else {
               this.showInfo('Not enough resources!');
             }
