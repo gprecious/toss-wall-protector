@@ -12,9 +12,9 @@ export class Wall {
   public readonly x: number;
   public readonly wallWidth: number;
 
-  constructor(scene: Phaser.Scene) {
-    this.hp = WALL_CONFIG.maxHp;
-    this.maxHp = WALL_CONFIG.maxHp;
+  constructor(scene: Phaser.Scene, customMaxHp?: number) {
+    this.hp = customMaxHp ?? WALL_CONFIG.maxHp;
+    this.maxHp = customMaxHp ?? WALL_CONFIG.maxHp;
     this.x = WALL_CONFIG.x;
     this.wallWidth = WALL_CONFIG.width;
 

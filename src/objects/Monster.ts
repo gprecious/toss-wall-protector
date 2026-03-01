@@ -14,15 +14,18 @@ export class Monster extends Phaser.Physics.Arcade.Sprite {
   private hpBg: Phaser.GameObjects.Rectangle;
   private hpFill: Phaser.GameObjects.Rectangle;
 
-  constructor(scene: Phaser.Scene, x: number, y: number, type: MonsterType) {
+  constructor(
+    scene: Phaser.Scene, x: number, y: number, type: MonsterType,
+    hpMult = 1, speedMult = 1, dmgMult = 1,
+  ) {
     const cfg = MONSTER_CONFIG[type];
     super(scene, x, y, `monster_${type}`);
 
     this.monsterType = type;
-    this.hp = cfg.hp;
-    this.maxHp = cfg.hp;
-    this.dmg = cfg.damage;
-    this.moveSpeed = cfg.speed;
+    this.hp = Math.floor(cfg.hp * hpMult);
+    this.maxHp = this.hp;
+    this.dmg = Math.floor(cfg.damage * dmgMult);
+    this.moveSpeed = Math.floor(cfg.speed * speedMult);
     this.atkCooldown = cfg.attackCooldown;
 
     scene.add.existing(this);
@@ -71,12 +74,8 @@ export class Monster extends Phaser.Physics.Arcade.Sprite {
   }
 
   cleanup(): void {
-    if (this.hpBg && this.hpBg.active) {
-      this.hpBg.destroy();
-    }
-    if (this.hpFill && this.hpFill.active) {
-      this.hpFill.destroy();
-    }
+    if (this.hpBg && this.hpBg.active) this.hpBg.destroy();
+    if (this.hpFill && this.hpFill.active) this.hpFill.destroy();
     this.hpBg = null as unknown as Phaser.GameObjects.Rectangle;
     this.hpFill = null as unknown as Phaser.GameObjects.Rectangle;
   }
