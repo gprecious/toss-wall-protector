@@ -32,11 +32,11 @@ export class ResultScene extends Phaser.Scene {
     const score = data.monstersKilled * 100 + data.npcsHealed * 50;
 
     const stats = [
-      `Stage: \${data.stage + 1}`,
-      `Wall HP: \${data.wallHp} / \${data.wallMaxHp}`,
-      `Monsters Killed: \${data.monstersKilled}`,
-      `NPCs Healed: \${data.npcsHealed}`,
-      `Score: \${score}`,
+      `Stage: ${data.stage + 1}`,
+      `Wall HP: ${data.wallHp} / ${data.wallMaxHp}`,
+      `Monsters Killed: ${data.monstersKilled}`,
+      `NPCs Healed: ${data.npcsHealed}`,
+      `Score: ${score}`,
     ];
 
     stats.forEach((line, i) => {

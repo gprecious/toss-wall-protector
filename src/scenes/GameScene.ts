@@ -47,7 +47,7 @@ export class GameScene extends Phaser.Scene {
 
     // Show interstitial ad every 3 stages
     if (adManager.shouldShowInterstitial(this.stage)) {
-      adManager.showInterstitialAd().catch(() => {});
+      adManager.showInterstitialAd().then(() => {}).catch(() => {});
     }
 
     this.playerResources = new Map([

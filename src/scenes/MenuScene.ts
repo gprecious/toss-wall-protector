@@ -95,9 +95,12 @@ export class MenuScene extends Phaser.Scene {
       if (!owned) {
         buyBtn.setInteractive({ useHandCursor: true });
         buyBtn.on('pointerdown', async () => {
+          buyBtn.removeInteractive().setColor('#666666').setText('구매중...');
           const result = await iapManager.purchase(product.id);
           if (result.success) {
-            buyBtn.setText('구매완료').setColor('#444444').removeInteractive();
+            buyBtn.setText('구매완료').setColor('#444444');
+          } else {
+            buyBtn.setText(product.priceLabel).setColor('#44aa44').setInteractive({ useHandCursor: true });
           }
         });
       }
