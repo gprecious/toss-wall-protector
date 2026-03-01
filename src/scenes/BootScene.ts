@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { MonsterType, MONSTER_CONFIG, NPCType, NPC_CONFIG, ResourceType, RESOURCE_CONFIG } from '../data/GameConfig';
+import { initSDK } from '../toss';
 
 export class BootScene extends Phaser.Scene {
   constructor() {
@@ -8,6 +9,7 @@ export class BootScene extends Phaser.Scene {
 
   create(): void {
     this.generateTextures();
+    initSDK();
 
     const { width, height } = this.scale;
     this.add
@@ -27,7 +29,7 @@ export class BootScene extends Phaser.Scene {
       g.clear();
       g.fillStyle(cfg.color);
       g.fillRect(0, 0, cfg.size, cfg.size);
-      g.generateTexture(`monster_${type}`, cfg.size, cfg.size);
+      g.generateTexture(`monster_\${type}`, cfg.size, cfg.size);
     }
 
     for (const type of Object.values(NPCType)) {
@@ -35,7 +37,7 @@ export class BootScene extends Phaser.Scene {
       g.clear();
       g.fillStyle(cfg.color);
       g.fillRect(0, 0, 26, 26);
-      g.generateTexture(`npc_${type}`, 26, 26);
+      g.generateTexture(`npc_\${type}`, 26, 26);
     }
 
     g.clear();
@@ -48,7 +50,7 @@ export class BootScene extends Phaser.Scene {
       g.clear();
       g.fillStyle(cfg.color);
       g.fillRect(0, 0, 20, 20);
-      g.generateTexture(`resource_${type}`, 20, 20);
+      g.generateTexture(`resource_\${type}`, 20, 20);
     }
 
     g.clear();
