@@ -7,6 +7,7 @@ import { DayNightCycle } from '../systems/DayNightCycle';
 import { WaveManager } from '../systems/WaveManager';
 import { ResourceManager } from '../systems/ResourceManager';
 import { NPCManager } from '../systems/NPCManager';
+import { adManager } from '../toss';
 
 export class GameScene extends Phaser.Scene {
   private wall!: Wall;
@@ -43,6 +44,11 @@ export class GameScene extends Phaser.Scene {
     this.gameOver = false;
     this.monstersKilled = 0;
     this.stage = data?.stage ?? 0;
+
+    // Show interstitial ad every 3 stages
+    if (adManager.shouldShowInterstitial(this.stage)) {
+      adManager.showInterstitialAd().then(() => {}).catch(() => {});
+    }
 
     this.playerResources = new Map([
       [ResourceType.HERB, 0],

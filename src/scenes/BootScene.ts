@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { MonsterType, MONSTER_CONFIG, NPCType, NPC_CONFIG, ResourceType, RESOURCE_CONFIG } from '../data/GameConfig';
+import { initSDK } from '../toss';
 
 export class BootScene extends Phaser.Scene {
   constructor() {
@@ -8,6 +9,7 @@ export class BootScene extends Phaser.Scene {
 
   create(): void {
     this.generateTextures();
+    initSDK();
 
     const { width, height } = this.scale;
     this.add
