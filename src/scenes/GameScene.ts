@@ -95,11 +95,11 @@ export class GameScene extends Phaser.Scene {
       }
     }
 
-    if (this.npcManager && typeof (this.npcManager as any).destroy === 'function') {
-      (this.npcManager as any).destroy();
+    if (this.npcManager && typeof (this.npcManager as any).destroyAll === 'function') {
+      (this.npcManager as any).destroyAll();
     }
-    if (this.resourceManager && typeof (this.resourceManager as any).destroy === 'function') {
-      (this.resourceManager as any).destroy();
+    if (this.resourceManager && typeof (this.resourceManager as any).destroyAll === 'function') {
+      (this.resourceManager as any).destroyAll();
     }
   }
 
