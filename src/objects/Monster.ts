@@ -71,8 +71,14 @@ export class Monster extends Phaser.Physics.Arcade.Sprite {
   }
 
   cleanup(): void {
-    this.hpBg?.destroy();
-    this.hpFill?.destroy();
+    if (this.hpBg && this.hpBg.active) {
+      this.hpBg.destroy();
+    }
+    if (this.hpFill && this.hpFill.active) {
+      this.hpFill.destroy();
+    }
+    this.hpBg = null as unknown as Phaser.GameObjects.Rectangle;
+    this.hpFill = null as unknown as Phaser.GameObjects.Rectangle;
   }
 
   destroy(fromScene?: boolean): void {

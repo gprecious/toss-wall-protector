@@ -45,7 +45,10 @@ export class ResultScene extends Phaser.Scene {
 
     btn.on('pointerover', () => btn.setColor('#ffffff'));
     btn.on('pointerout', () => btn.setColor('#aaaaaa'));
-    btn.on('pointerdown', () => this.scene.start('GameScene'));
+    btn.on('pointerdown', () => {
+      const nextStage = data.victory ? data.stage + 1 : data.stage;
+      this.scene.start('GameScene', { stage: nextStage });
+    });
 
     const menuBtn = this.add.text(cx, height - 60, 'Menu', {
       fontSize: '18px', color: '#888888',

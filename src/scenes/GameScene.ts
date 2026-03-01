@@ -39,10 +39,10 @@ export class GameScene extends Phaser.Scene {
     super({ key: 'GameScene' });
   }
 
-  create(): void {
+  create(data?: { stage?: number }): void {
     this.gameOver = false;
     this.monstersKilled = 0;
-    this.stage = 0;
+    this.stage = data?.stage ?? 0;
 
     this.playerResources = new Map([
       [ResourceType.HERB, 0],
@@ -67,6 +67,40 @@ export class GameScene extends Phaser.Scene {
     this.setupInput();
 
     this.dayNightCycle.startDay();
+
+    this.events.on('shutdown', this.handleShutdown, this);
+  }
+
+  private handleShutdown(): void {
+    this.events.off('phaseChange');
+    this.events.off('allWavesComplete');
+    this.events.off('nightTimeout');
+    this.events.off('waveStart');
+    this.events.off('shutdown', this.handleShutdown, this);
+
+    this.waveManager?.stop();
+
+    const monsters = this.monstersGroup?.getChildren() as Monster[] | undefined;
+    if (monsters) {
+      for (const m of [...monsters]) {
+        m.cleanup();
+        m.destroy();
+      }
+    }
+
+    const projectiles = this.projectilesGroup?.getChildren() as Phaser.Physics.Arcade.Sprite[] | undefined;
+    if (projectiles) {
+      for (const p of [...projectiles]) {
+        p.destroy();
+      }
+    }
+
+    if (this.npcManager && typeof (this.npcManager as any).destroy === 'function') {
+      (this.npcManager as any).destroy();
+    }
+    if (this.resourceManager && typeof (this.resourceManager as any).destroy === 'function') {
+      (this.resourceManager as any).destroy();
+    }
   }
 
   update(time: number, delta: number): void {
