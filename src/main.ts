@@ -12,6 +12,12 @@ const config: Phaser.Types.Core.GameConfig = {
   parent: document.body,
   scene: [BootScene, MenuScene, GameScene, ResultScene, UpgradeScene],
   backgroundColor: '#222222',
+  physics: {
+    default: 'arcade',
+    arcade: {
+      debug: false,
+    },
+  },
 };
 
 new Phaser.Game(config);
